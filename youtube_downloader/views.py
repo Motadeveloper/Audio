@@ -2,7 +2,7 @@ import os
 import random
 import string
 import yt_dlp
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import FileResponse, Http404
 from django.conf import settings
 
@@ -25,8 +25,9 @@ def baixar_video(url, formato):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
         video_title = info.get('title', 'video')
-        temp_filename = 'temp_video.' + formato
-
+        temp_filename = 'temp_video.' + (formato if formato == 'mp3' else 'mp4')
+        
+        # Gera um nome aleatório para o arquivo final
         video_filename = gerar_nome_aleatorio(formato)
         temp_file_path = os.path.join(settings.BASE_DIR, temp_filename)
         final_file_path = os.path.join(settings.BASE_DIR, video_filename)
@@ -44,15 +45,21 @@ def index(request):
         formato = request.POST.get('formato')
         try:
             video_title, video_filename = baixar_video(url, formato)
-            return render(request, 'youtube_downloader/index.html', {
-                'success': True,
+            return render(request, 'youtube_downloader/success.html', {
                 'video_title': video_title,
-                'video_filename': video_filename,
-                'formato': formato,
+                'video_filename': video_filename
             })
-        except FileNotFoundError as e:
+        except Exception as e:
             return render(request, 'youtube_downloader/index.html', {
-                'error': str(e),
+                'error': str(e)
             })
-    
     return render(request, 'youtube_downloader/index.html')
+
+def download_audio(request, filename):
+    file_path = os.path.join(settings.BASE_DIR, filename)
+    if os.path.exists(file_path):
+        response = FileResponse(open(file_path, 'rb'), as_attachment=True)
+        os.remove(file_path)  # Remove o arquivo após o download
+        return response
+    else:
+        raise Http404("Arquivo não encontrado.")
