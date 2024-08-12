@@ -19,13 +19,22 @@ def baixar_video(url, formato):
             'preferredquality': '192',
         }] if formato == 'mp3' else [],
         'ffmpeg_location': '/usr/bin/ffmpeg',
+        'outtmpl': 'temp_video.%(ext)s',  # Nome temporário
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
         video_title = info.get('title', 'video')
+        temp_filename = 'temp_video.' + formato
+
         video_filename = gerar_nome_aleatorio(formato)
-        os.rename(f"{video_title}.{formato}", video_filename)
+        temp_file_path = os.path.join(settings.BASE_DIR, temp_filename)
+        final_file_path = os.path.join(settings.BASE_DIR, video_filename)
+
+        if os.path.exists(temp_file_path):
+            os.rename(temp_file_path, final_file_path)
+        else:
+            raise FileNotFoundError(f"Arquivo {temp_file_path} não encontrado.")
 
     return video_title, video_filename
 
@@ -33,21 +42,17 @@ def index(request):
     if request.method == 'POST':
         url = request.POST.get('url')
         formato = request.POST.get('formato')
-        video_title, video_filename = baixar_video(url, formato)
-
-        return render(request, 'youtube_downloader/index.html', {
-            'success': True,
-            'video_title': video_title,
-            'video_filename': video_filename,
-            'formato': formato,
-        })
+        try:
+            video_title, video_filename = baixar_video(url, formato)
+            return render(request, 'youtube_downloader/index.html', {
+                'success': True,
+                'video_title': video_title,
+                'video_filename': video_filename,
+                'formato': formato,
+            })
+        except FileNotFoundError as e:
+            return render(request, 'youtube_downloader/index.html', {
+                'error': str(e),
+            })
     
     return render(request, 'youtube_downloader/index.html')
-
-def download_audio(request, video_filename):
-    file_path = os.path.join(settings.BASE_DIR, video_filename)
-    if os.path.exists(file_path):
-        response = FileResponse(open(file_path, 'rb'), as_attachment=True)
-        return response
-    else:
-        raise Http404("Arquivo não encontrado.")
