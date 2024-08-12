@@ -9,7 +9,14 @@
     <h1>Downloader de Áudio do YouTube</h1>
     
     {% if success %}
-        <p>Áudio salvo como {{ nome_arquivo }}.mp3</p>
+        <div style="border: 1px solid #ccc; padding: 10px; margin: 20px 0;">
+            <img src="{{ video_thumbnail }}" alt="Thumbnail" style="width: 150px; height: auto;">
+            <h2>{{ video_title }}</h2>
+            <p>Duração: {{ video_duration }} segundos</p>
+            <a href="{% url 'download_audio' nome_arquivo=nome_arquivo %}">
+                <button>Baixar Áudio</button>
+            </a>
+        </div>
     {% endif %}
 
     <form method="post">
