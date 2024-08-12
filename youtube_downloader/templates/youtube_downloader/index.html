@@ -9,6 +9,7 @@
             font-family: Arial, sans-serif;
             background-color: #f8f8f8;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -21,18 +22,13 @@
             padding: 40px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
         .converter-container h2 {
             font-size: 24px;
             color: #333333;
             margin-bottom: 10px;
-        }
-
-        .converter-container p {
-            font-size: 16px;
-            color: #777777;
-            margin-bottom: 20px;
         }
 
         .converter-box {
@@ -65,19 +61,80 @@
             background-color: #ff3a1a;
         }
 
-        .success-message {
+        .download-card {
+            display: none;
+            width: 90%;
+            max-width: 600px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
             margin-top: 20px;
-            color: green;
+            animation: slideIn 0.5s forwards;
+        }
+
+        .download-card img {
+            width: 150px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .download-card-content {
+            flex-grow: 1;
+            padding-left: 20px;
+        }
+
+        .download-card h4 {
             font-size: 18px;
+            color: #333333;
+            margin-bottom: 5px;
+        }
+
+        .download-card p {
+            font-size: 14px;
+            color: #777777;
+            margin-bottom: 5px;
+        }
+
+        .download-card-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .download-card-buttons button {
+            padding: 10px 15px;
+            background-color: #ff4b2b;
+            border: none;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .download-card-buttons button:hover {
+            background-color: #ff3a1a;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
     <div class="converter-container">
         <h2>Downloader de Áudio do YouTube</h2>
-        {% if success %}
-            <p class="success-message">Áudio salvo como {{ nome_arquivo }}.mp3</p>
-        {% endif %}
 
         <form method="post" class="converter-box">
             {% csrf_token %}
@@ -85,5 +142,26 @@
             <button type="submit">Baixar Áudio</button>
         </form>
     </div>
+
+    <div class="download-card" id="downloadCard">
+        <img src="https://via.placeholder.com/150" alt="Thumbnail">
+        <div class="download-card-content">
+            <h4>{{ titulo_video }}</h4>
+            <p>Audio Quality: 320kbps</p>
+            <p>Video Quality: 1080p</p>
+        </div>
+        <div class="download-card-buttons">
+            <button>Download MP3</button>
+            <button>Download MP4</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            {% if success %}
+                document.getElementById('downloadCard').style.display = 'flex';
+            {% endif %}
+        });
+    </script>
 </body>
 </html>
