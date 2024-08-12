@@ -41,21 +41,25 @@ def index(request):
     if request.method == 'POST':
         url = request.POST.get('url')
         formato = request.POST.get('formato')
-        nome_arquivo = request.POST.get('nome_arquivo')
+        nome_arquivo = gerar_nome_aleatorio(formato.split('.')[0])  # Nome aleatório
+
         try:
-            video_title, final_file_path = baixar_video(url, formato, nome_arquivo)
-            return render(request, 'youtube_downloader/index.html', {
+            video_title, file_path = baixar_video(url, formato, nome_arquivo)
+            # Redireciona para a página de sucesso passando o título e o nome do arquivo
+            return render(request, 'youtube_downloader/success.html', {
                 'video_title': video_title,
-                'video_filename': os.path.basename(final_file_path),
+                'file_path': file_path
             })
         except Exception as e:
-            return render(request, 'index.html', {'error': str(e)})
+            return render(request, 'youtube_downloader/index.html', {'error': str(e)})
+
     return render(request, 'youtube_downloader/index.html')
 
 def download_audio(request, filename):
     file_path = os.path.join(settings.MEDIA_ROOT, filename)
+
     if os.path.exists(file_path):
-        response = FileResponse(open(file_path, 'rb'))
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        response = FileResponse(open(file_path, 'rb'), as_attachment=True)
         return response
-    raise Http404("Arquivo não encontrado.")
+    else:
+        raise Http404("Arquivo não encontrado.")
