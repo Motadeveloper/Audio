@@ -44,13 +44,13 @@ def index(request):
         nome_arquivo = request.POST.get('nome_arquivo')
         try:
             video_title, final_file_path = baixar_video(url, formato, nome_arquivo)
-            return render(request, 'index.html', {
+            return render(request, 'youtube_downloader/index.html', {
                 'video_title': video_title,
                 'video_filename': os.path.basename(final_file_path),
             })
         except Exception as e:
             return render(request, 'index.html', {'error': str(e)})
-    return render(request, 'index.html')
+    return render(request, 'youtube_downloader/index.html')
 
 def download_audio(request, filename):
     file_path = os.path.join(settings.MEDIA_ROOT, filename)
