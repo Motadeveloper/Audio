@@ -1,22 +1,54 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversão Completa</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.2.4/dist/tailwind.min.css" rel="stylesheet">
+    <title>Conversão Concluída</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-
-    <div class="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
-        <h1 class="text-2xl font-semibold mb-4">Conversão Completa</h1>
-        <p class="text-lg mb-4">O áudio do vídeo "<strong>{{ video_title }}</strong>" foi convertido com sucesso.</p>
-        <p class="text-gray-600 mb-4">Baixe agora o áudio abaixo:</p>
-        <a href="{% url 'download_audio' video_filename %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Baixar Áudio</a>
-        <div class="mt-4">
-            <a href="/" class="text-blue-500 hover:underline">Converter outro vídeo</a>
-        </div>
+<body>
+    <div class="container">
+        <h1>Conversão Concluída!</h1>
+        <p>O áudio do vídeo "{{ video_title }}" foi convertido com sucesso. Baixe agora o áudio abaixo:</p>
+        <a href="{% url 'download_audio' video_filename %}" class="btn">Baixar Áudio</a>
+        <br><br>
+        <a href="{% url 'index' %}" class="btn">Converter Outro Vídeo</a>
     </div>
-
 </body>
 </html>

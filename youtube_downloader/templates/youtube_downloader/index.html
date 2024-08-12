@@ -1,60 +1,87 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor de Vídeo do YouTube</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.2.4/dist/tailwind.min.css" rel="stylesheet">
+    <title>Converter Vídeo do YouTube</title>
     <style>
-        .loader {
-            border: 16px solid #f3f3f3;
-            border-top: 16px solid #3498db;
-            border-radius: 50%;
-            width: 120px;
-            height: 120px;
-            animation: spin 2s linear infinite;
-            margin: auto;
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group input[type="submit"] {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-group input[type="submit"]:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-
-    <!-- Formulário -->
-    <div id="form-container" class="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
-        <h1 class="text-2xl font-semibold mb-4">Conversor de Áudio do YouTube</h1>
-        {% if error %}
-            <p class="text-red-500 mb-4">{{ error }}</p>
-        {% endif %}
-        <form id="form" method="POST" action="">
+<body>
+    <div class="container">
+        <h1>Converter Vídeo do YouTube</h1>
+        <form method="post">
             {% csrf_token %}
-            <div class="mb-4">
-                <label for="url" class="block text-gray-700">URL do vídeo:</label>
-                <input type="text" id="url" name="url" class="mt-1 block w-full p-2 border border-gray-300 rounded" required>
+            <div class="form-group">
+                <label for="url">URL do Vídeo:</label>
+                <input type="text" id="url" name="url" required>
             </div>
-            <div class="mb-4">
-                <label for="formato" class="block text-gray-700">Escolha o formato:</label>
-                <select id="formato" name="formato" class="mt-1 block w-full p-2 border border-gray-300 rounded" required>
+            <div class="form-group">
+                <label for="formato">Formato:</label>
+                <select id="formato" name="formato" required>
                     <option value="mp3">MP3</option>
                     <option value="mp4">MP4</option>
                 </select>
             </div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Converter em Áudio</button>
+            <div class="form-group">
+                <label for="nome_arquivo">Nome do Arquivo:</label>
+                <input type="text" id="nome_arquivo" name="nome_arquivo" placeholder="Deixe em branco para um nome aleatório">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Converter em Audio">
+            </div>
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
         </form>
-        <div id="loader" class="hidden mt-4">
-            <div class="loader"></div>
-        </div>
     </div>
-
-    <script>
-        document.getElementById('form').addEventListener('submit', function() {
-            document.getElementById('loader').classList.remove('hidden');
-            document.getElementById('form-container').classList.add('hidden');
-        });
-    </script>
-
 </body>
 </html>
