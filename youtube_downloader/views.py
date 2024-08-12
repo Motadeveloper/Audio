@@ -8,6 +8,7 @@ def baixar_audio(url, nome_arquivo):
     ydl_opts = {
         'format': 'bestaudio/best',
         'outtmpl': f'{nome_arquivo}.mp3',
+        'ffmpeg_location': '/usr/bin/ffmpeg',  # Especifica o caminho do ffmpeg
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
@@ -24,6 +25,7 @@ def baixar_audio(url, nome_arquivo):
 
     return video_title, video_duration, video_thumbnail
 
+    return video_title, video_duration, video_thumbnail
 def index(request):
     if request.method == 'POST':
         url = request.POST.get('url')
