@@ -19,71 +19,69 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .hidden {
-            display: none;
-        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <!-- Formulário -->
     <div id="form-container" class="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
         <h1 class="text-2xl font-semibold mb-4">Conversor de Áudio do YouTube</h1>
-        <form id="video-form" method="POST">
-            {% csrf_token %}
+        <form id="video-form" method="POST" onsubmit="handleFormSubmit(event)">
             <div class="mb-4">
-                <label for="url" class="block text-gray-700">URL do Vídeo:</label>
-                <input type="text" id="url" name="url" class="mt-1 p-2 w-full border border-gray-300 rounded-md" required>
+                <label for="url" class="block text-gray-700">URL do Vídeo</label>
+                <input type="text" id="url" name="url" class="w-full border border-gray-300 rounded-lg p-2 mt-1" required>
             </div>
             <div class="mb-4">
-                <label for="formato" class="block text-gray-700">Escolha o Formato:</label>
-                <select id="formato" name="formato" class="mt-1 p-2 w-full border border-gray-300 rounded-md">
+                <label for="formato" class="block text-gray-700">Escolha o Formato</label>
+                <select id="formato" name="formato" class="w-full border border-gray-300 rounded-lg p-2 mt-1">
                     <option value="mp3">MP3</option>
                     <option value="mp4">MP4</option>
                 </select>
             </div>
-            <button type="button" onclick="submitForm()" class="btn bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">Converter em Áudio</button>
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">Converter em Áudio</button>
         </form>
-        <div id="loading" class="hidden text-center mt-8">
-            <div class="loader"></div>
-            <p class="mt-4 text-gray-700">Convertendo, por favor aguarde...</p>
-        </div>
-        <div id="success-card" class="hidden mt-8">
-            <div class="bg-white p-6 rounded-lg shadow-lg">
-                <h2 class="text-xl font-semibold mb-4">O áudio do vídeo "<span id="video-title"></span>" foi convertido com sucesso!</h2>
-                <a id="download-link" href="#" download class="btn bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded">Baixe agora o áudio</a>
-                <button onclick="resetForm()" class="btn bg-gray-500 hover:bg-gray-700 text-white py-2 px-4 rounded mt-4">Converter outro vídeo</button>
-            </div>
-        </div>
     </div>
+
+    <!-- Loader -->
+    <div id="loader" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Card de Sucesso -->
+    <div id="success-card" class="hidden w-full max-w-lg bg-white p-8 rounded-lg shadow-lg text-center">
+        <h2 class="text-xl font-semibold mb-4" id="success-message"></h2>
+        <a id="download-link" href="#" class="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600">Baixe o Áudio Aqui</a>
+        <button onclick="resetForm()" class="mt-4 bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">Converter Outro Vídeo</button>
+    </div>
+
     <script>
-        function submitForm() {
-            const form = document.getElementById('video-form');
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
             const url = form.url.value;
             const formato = form.formato.value;
-            
-            // Show the loader and hide the form
-            document.getElementById('loading').classList.remove('hidden');
-            document.getElementById('form-container').classList.add('hidden');
 
-            // Simulate a download process with a delay
+            document.getElementById('form-container').classList.add('hidden');
+            document.getElementById('loader').classList.remove('hidden');
+
+            // Simulando o processo de conversão com um timeout (remova isso e faça a chamada real ao backend)
             setTimeout(() => {
-                // Mock video title and filename for demo purposes
-                const videoTitle = 'Título do Vídeo Exemplo';
-                const videoFilename = `example.${formato}`;
-                
-                // Update the success card with video info
-                document.getElementById('video-title').textContent = videoTitle;
+                document.getElementById('loader').classList.add('hidden');
+                const videoTitle = 'Título do Vídeo'; // Substitua pelo título real
+                const videoFilename = 'arquivo.mp3'; // Substitua pelo nome do arquivo real
+
+                document.getElementById('success-message').textContent = `O áudio do vídeo '${videoTitle}' foi convertido com sucesso. Baixe agora o áudio abaixo.`;
                 document.getElementById('download-link').href = `/download/${videoFilename}`;
-                
-                // Hide the loader and show the success card
-                document.getElementById('loading').classList.add('hidden');
                 document.getElementById('success-card').classList.remove('hidden');
-            }, 3000); // Simulate 3 seconds of processing time
+            }, 3000); // Simula 3 segundos de conversão
         }
 
         function resetForm() {
-            document.getElementById('form-container').classList.remove('hidden');
             document.getElementById('success-card').classList.add('hidden');
+            document.getElementById('form-container').classList.remove('hidden');
+            document.getElementById('video-form').reset();
         }
     </script>
+
 </body>
 </html>
