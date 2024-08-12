@@ -3,31 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Downloader de Áudio do YouTube</title>
+    <title>Converter Vídeo do YouTube em Áudio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Downloader de Áudio do YouTube</h1>
-    
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
+
+    <div id="form-container" class="w-full max-w-md bg-white p-8 rounded shadow-lg">
+        <h1 class="text-2xl font-bold mb-6 text-center">Converter Vídeo do YouTube em Áudio</h1>
+        <form method="post">
+            {% csrf_token %}
+            <label for="url" class="block text-sm font-medium text-gray-700">URL do vídeo do YouTube:</label>
+            <input type="text" id="url" name="url" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mb-4">
+
+            <label for="formato" class="block text-sm font-medium text-gray-700">Formato:</label>
+            <select id="formato" name="formato" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mb-4">
+                <option value="mp3">MP3</option>
+                <option value="mp4">MP4</option>
+            </select>
+
+            <button type="submit" class="w-full bg-indigo-600 text-white p-2 rounded hover:bg-indigo-700 transition">Converter em Áudio</button>
+        </form>
+    </div>
+
     {% if success %}
-        <div style="border: 1px solid #ccc; padding: 10px; margin: 20px 0;">
-            <img src="{{ video_thumbnail }}" alt="Thumbnail" style="width: 150px; height: auto;">
-            <h2>{{ video_title }}</h2>
-            <p>Duração: {{ video_duration }} segundos</p>
-            <a href="{% url 'download_audio' nome_arquivo=nome_arquivo %}">
-                <button>Baixar Áudio</button>
-            </a>
-        </div>
+    <div id="result-container" class="w-full max-w-md bg-white p-8 rounded shadow-lg mt-6 text-center">
+        <h2 class="text-xl font-bold mb-4">O áudio do vídeo "{{ video_title }}" foi convertido com sucesso!</h2>
+        <p class="mb-4">Baixe agora o áudio abaixo:</p>
+        <a href="{% url 'download_audio' video_filename=video_filename %}" class="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700 transition inline-block">Baixar Áudio</a>
+        <button id="convert-another" class="w-full bg-gray-600 text-white p-2 rounded mt-4 hover:bg-gray-700 transition">Converter outro vídeo</button>
+    </div>
     {% endif %}
 
-    <form method="post">
-        {% csrf_token %}
-        <label for="url">URL do vídeo do YouTube:</label><br>
-        <input type="text" id="url" name="url" required><br><br>
-        
-        <label for="nome_arquivo">Nome do arquivo de saída (sem extensão):</label><br>
-        <input type="text" id="nome_arquivo" name="nome_arquivo" required><br><br>
-        
-        <button type="submit">Baixar Áudio</button>
-    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const formContainer = document.getElementById('form-container');
+            const resultContainer = document.getElementById('result-container');
+            const convertAnotherButton = document.getElementById('convert-another');
+
+            if (resultContainer) {
+                formContainer.style.display = 'none';
+                resultContainer.style.display = 'block';
+            }
+
+            convertAnotherButton.addEventListener('click', function () {
+                resultContainer.style.display = 'none';
+                formContainer.style.display = 'block';
+            });
+        });
+    </script>
 </body>
 </html>
