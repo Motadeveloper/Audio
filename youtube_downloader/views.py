@@ -13,6 +13,7 @@ def baixar_audio(url, nome_arquivo):
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
+        'keepvideo': True  # Isso manterá o arquivo original e o convertido
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -44,7 +45,13 @@ def download_audio(request, nome_arquivo):
     if os.path.exists(file_path):
         response = FileResponse(open(file_path, 'rb'))
         response['Content-Disposition'] = f'attachment; filename="{nome_arquivo}.mp3"'
-        os.remove(file_path)
+        
+        # Agendar a exclusão do arquivo após o download
+        def delete_file(path):
+            os.remove(path)
+        
+        response.close = lambda: delete_file(file_path)  # Exclui o arquivo após o download
+        
         return response
     else:
-        raise Http404
+        raise Http404("Arquivo não encontrado.")
