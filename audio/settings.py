@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-r7h4m_!d&rf@tnxgluzxisnr5%xay&qh=28%!(v@82#ccs+vya
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['compartil.com.br:8080']
+ALLOWED_HOSTS = ['compartil.com.br', 'www.compartil.com.br']
 
 
 # Application definition
