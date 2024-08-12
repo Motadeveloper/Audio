@@ -28,7 +28,7 @@ def baixar_video(url, formato, nome_arquivo):
         temp_filename = 'temp_video.' + (formato if formato == 'mp3' else 'mp4')
         
         # Gera o caminho final do arquivo com o nome fornecido pelo usuário
-        final_file_path = os.path.join(settings.BASE_DIR, nome_arquivo + '.' + formato)
+        final_file_path = os.path.join(settings.MEDIA_ROOT, nome_arquivo + '.' + formato)
 
         if os.path.exists(temp_filename):
             os.rename(temp_filename, final_file_path)
@@ -42,27 +42,20 @@ def index(request):
         url = request.POST.get('url')
         formato = request.POST.get('formato')
         nome_arquivo = request.POST.get('nome_arquivo')
-
-        if not nome_arquivo:
-            nome_arquivo = gerar_nome_aleatorio(formato)
-
         try:
-            video_title, video_filename = baixar_video(url, formato, nome_arquivo)
-            return render(request, 'youtube_downloader/success.html', {
+            video_title, final_file_path = baixar_video(url, formato, nome_arquivo)
+            return render(request, 'index.html', {
                 'video_title': video_title,
-                'video_filename': video_filename,
+                'video_filename': os.path.basename(final_file_path),
             })
         except Exception as e:
-            return render(request, 'youtube_downloader/index.html', {'error': str(e)})
-
-    return render(request, 'youtube_downloader/index.html')
-
+            return render(request, 'index.html', {'error': str(e)})
+    return render(request, 'index.html')
 
 def download_audio(request, filename):
-    file_path = os.path.join(settings.BASE_DIR, filename)
+    file_path = os.path.join(settings.MEDIA_ROOT, filename)
     if os.path.exists(file_path):
-        response = FileResponse(open(file_path, 'rb'), as_attachment=True)
-        os.remove(file_path)  # Remove o arquivo após o download
+        response = FileResponse(open(file_path, 'rb'))
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
-    else:
-        raise Http404("Arquivo não encontrado.")
+    raise Http404("Arquivo não encontrado.")
