@@ -1,5 +1,7 @@
 from django.shortcuts import render
 import yt_dlp
+import os
+import uuid
 
 def baixar_audio(url, nome_arquivo):
     ydl_opts = {
@@ -19,7 +21,7 @@ def baixar_audio(url, nome_arquivo):
 def index(request):
     if request.method == 'POST':
         url = request.POST.get('url')
-        nome_arquivo = request.POST.get('nome_arquivo')
+        nome_arquivo = str(uuid.uuid4())  # Gera um nome de arquivo único
         baixar_audio(url, nome_arquivo)
         return render(request, 'youtube_downloader/index.html', {'success': True, 'nome_arquivo': nome_arquivo})
     return render(request, 'youtube_downloader/index.html')
