@@ -19,6 +19,39 @@
             overflow-x: hidden;
         }
 
+        /* Animação de digitação */
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: black; }
+        }
+
+        h1 {
+            font-size: 2.5vw;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid;
+            width: 0;
+            animation: typing 4s steps(40, end), blink-caret .75s step-end infinite;
+        }
+
+        p {
+            font-size: 2vw;
+            margin-top: 10px;
+            opacity: 0;
+            animation: fadeInText 2s forwards;
+            animation-delay: 4s;
+        }
+
+        @keyframes fadeInText {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         /* Estilos do Loader */
         .loader {
             position: fixed;
@@ -48,7 +81,7 @@
             font-size: 18px;
             color: #333;
             opacity: 0;
-            animation: slideUp 0.5s forwards;
+            transition: opacity 0.5s ease-in-out;
         }
 
         @keyframes spin {
@@ -74,13 +107,6 @@
             width: 100%;
             max-width: 600px;
             box-sizing: border-box;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #333;
-            animation: fadeIn 1s ease-in-out;
         }
 
         .input-container {
@@ -172,7 +198,11 @@
 
         @media (max-width: 600px) {
             h1 {
-                font-size: 20px;
+                font-size: 4vw;
+            }
+
+            p {
+                font-size: 3vw;
             }
 
             .input-container input {
@@ -193,7 +223,11 @@
 
         @media (max-width: 400px) {
             h1 {
-                font-size: 18px;
+                font-size: 5vw;
+            }
+
+            p {
+                font-size: 4vw;
             }
 
             .input-container input {
@@ -239,12 +273,12 @@
 <body>
     <div class="loader" id="loader">
         <div class="spinner"></div>
-        <p id="loader-message">Buscando vídeo no YouTube...</p>
-        <p class="loader-message" id="extra-message"></p>
+        <p class="loader-message" id="loader-message"></p>
     </div>
 
     <div class="container">
-        <h1>Baixar Vídeo do YouTube</h1>
+        <h1>Conversor do YouTube para MP3 sem anúncios</h1>
+        <p>Baixe e salve vídeos do YouTube gratuitamente</p>
         <div class="input-container">
             <input type="text" id="url" placeholder="Cole o link do YouTube aqui...">
         </div>
@@ -269,14 +303,12 @@
             const videoThumbnail = document.getElementById('video-thumbnail');
             const downloadMp3Button = document.getElementById('download-mp3');
             const downloadMp4Button = document.getElementById('download-mp4');
-            const extraMessage = document.getElementById('extra-message');
 
             urlInput.addEventListener('input', function() {
                 const url = urlInput.value;
 
                 if (url) {
                     loaderMessage.textContent = "Buscando vídeo no YouTube...";
-                    extraMessage.style.display = 'none';
                     loader.style.display = 'flex';
                     videoCard.style.display = 'none';
 
@@ -310,10 +342,14 @@
 
                 function showNextMessage() {
                     if (currentMessageIndex < messages.length) {
-                        extraMessage.textContent = messages[currentMessageIndex];
-                        extraMessage.style.display = 'block';
-                        extraMessage.style.opacity = '0';
-                        extraMessage.style.animation = 'slideUp 0.5s forwards';
+                        loaderMessage.textContent = messages[currentMessageIndex];
+                        loaderMessage.style.opacity = '0';
+                        loaderMessage.style.transition = 'none';
+                        loaderMessage.style.animation = 'none';
+                        requestAnimationFrame(() => {
+                            loaderMessage.style.transition = 'opacity 0.5s ease-in-out';
+                            loaderMessage.style.opacity = '1';
+                        });
                         currentMessageIndex++;
                         setTimeout(showNextMessage, 2000); // Tempo para exibir cada mensagem
                     } else {
@@ -321,7 +357,6 @@
                     }
                 }
 
-                extraMessage.style.display = 'none';
                 showNextMessage();
             }
 
