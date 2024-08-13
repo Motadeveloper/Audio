@@ -247,14 +247,19 @@
             const downloadMp4Button = document.getElementById('download-mp4');
 
             // Botão "Colar"
-            pasteButton.addEventListener('click', function() {
-                navigator.clipboard.readText().then(text => {
-                    urlInput.value = text;
-                    urlInput.dispatchEvent(new Event('input')); // Disparar o evento de input
-                }).catch(err => {
+            pasteButton.addEventListener('click', async function() {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    if (text) {
+                        urlInput.value = text;
+                        urlInput.dispatchEvent(new Event('input')); // Disparar o evento de input
+                    } else {
+                        alert('A área de transferência está vazia.');
+                    }
+                } catch (err) {
                     console.error('Failed to read clipboard contents: ', err);
                     alert('Não foi possível acessar o conteúdo da área de transferência. Permita o acesso ao clipboard.');
-                });
+                }
             });
 
             urlInput.addEventListener('input', function() {
