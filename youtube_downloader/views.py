@@ -10,7 +10,7 @@ def baixar_audio_video(url):
     # Configuração para baixar o áudio (MP3)
     audio_opts = {
         'format': 'bestaudio/best',
-        'outtmpl': os.path.join(settings.MEDIA_ROOT, f'{nome_base}.mp3'),
+        'outtmpl': os.path.join(settings.MEDIA_ROOT, f'{nome_base}.%(ext)s'),  # Remover a extensão duplicada
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
@@ -21,7 +21,7 @@ def baixar_audio_video(url):
     # Configuração para baixar o vídeo (MP4)
     video_opts = {
         'format': 'bestvideo+bestaudio/best',
-        'outtmpl': os.path.join(settings.MEDIA_ROOT, f'{nome_base}.mp4'),
+        'outtmpl': os.path.join(settings.MEDIA_ROOT, f'{nome_base}.%(ext)s'),  # Manter a extensão correta
     }
 
     with yt_dlp.YoutubeDL(audio_opts) as ydl_audio, yt_dlp.YoutubeDL(video_opts) as ydl_video:
@@ -33,8 +33,8 @@ def baixar_audio_video(url):
             'thumbnail': info.get('thumbnail', ''),
             'audio_quality': '320kbps',
             'video_quality': info.get('format', 'Desconhecido').split(' ')[-1],
-            'nome_mp3': f'{nome_base}.mp3',
-            'nome_mp4': f'{nome_base}.mp4',
+            'nome_mp3': f'{nome_base}.mp3',  # Garantir que a extensão correta seja usada
+            'nome_mp4': f'{nome_base}.mp4',  # Garantir que a extensão correta seja usada
         }
 
 def index(request):
