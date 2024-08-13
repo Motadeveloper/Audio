@@ -80,7 +80,7 @@
             font-size: 5vw;
             margin-bottom: 20px;
             color: #333;
-            animation: fadeIn 1s ease-in-out;
+            animation: fadeInUp 1s ease-in-out;
         }
 
         h1 span {
@@ -91,6 +91,7 @@
             font-size: 3vw;
             color: #333;
             margin-bottom: 20px;
+            animation: fadeInUp 1s ease-in-out;
         }
 
         /* Estilos do Input */
@@ -187,7 +188,7 @@
             }
 
             p {
-                font-size: 4vw;
+                font-size: 3.5vw;
             }
 
             .input-container input {
@@ -212,7 +213,7 @@
             }
 
             p {
-                font-size: 5vw;
+                font-size: 4vw;
             }
 
             .input-container input {
@@ -231,19 +232,21 @@
             }
         }
 
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         @keyframes slideIn {
             to {
                 opacity: 1;
                 transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
             }
         }
 
