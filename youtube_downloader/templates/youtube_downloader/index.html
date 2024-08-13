@@ -298,34 +298,37 @@
                 }
             });
 
-            // Simular carregamento com porcentagem (exemplo para demonstração)
-            let downloadProgress = 0;
-            function simulateDownload() {
-                downloadProgress += Math.floor(Math.random() * 10) + 1;
-                if (downloadProgress >= 100) {
-                    downloadProgress = 100;
-                    loader.style.display = 'none';
-                }
-                loaderPercent.textContent = `${downloadProgress}%`;
-                if (downloadProgress < 100) {
-                    setTimeout(simulateDownload, 300);
-                }
+            function startDownloadSimulation() {
+                loaderPercent.style.display = 'block';
+                let downloadProgress = 0;
+
+                const interval = setInterval(() => {
+                    downloadProgress += Math.floor(Math.random() * 10) + 5; // Incrementa de 5 a 14%
+                    if (downloadProgress >= 100) {
+                        downloadProgress = 100;
+                        loaderPercent.textContent = `${downloadProgress}%`;
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            loader.style.display = 'none';
+                        }, 500); // Espera 0,5s para fechar o loader após atingir 100%
+                    } else {
+                        loaderPercent.textContent = `${downloadProgress}%`;
+                    }
+                }, 500); // Atualiza a cada 0,5s
             }
 
             downloadMp3Button.addEventListener('click', function() {
                 loaderMessage.textContent = "Baixando MP3...";
-                loaderPercent.style.display = 'block';
-                downloadProgress = 0;
+                loaderPercent.textContent = '0%';
                 loader.style.display = 'flex';
-                simulateDownload();
+                startDownloadSimulation();
             });
 
             downloadMp4Button.addEventListener('click', function() {
                 loaderMessage.textContent = "Baixando MP4...";
-                loaderPercent.style.display = 'block';
-                downloadProgress = 0;
+                loaderPercent.textContent = '0%';
                 loader.style.display = 'flex';
-                simulateDownload();
+                startDownloadSimulation();
             });
         });
     </script>
