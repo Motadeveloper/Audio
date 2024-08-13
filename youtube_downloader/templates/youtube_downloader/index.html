@@ -19,32 +19,76 @@
             overflow-x: hidden;
         }
 
-        /* Animação de Entrada do Input */
+        /* Estilos do Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 6px solid #ccc;
+            border-top: 6px solid #ff4b2b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader p {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loader-percent {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Estilos do Container */
+        .container {
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            animation: fadeIn 1s ease-in-out;
+        }
+
         .input-container {
             position: relative;
             margin-bottom: 20px;
             width: 100%;
             opacity: 0;
-            animation: fadeIn 1s forwards;
-            animation-delay: 0.5s;
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* Efeito de Digitação no Placeholder */
-        .input-container input::placeholder {
-            color: #bbb;
-            opacity: 1;
-            animation: typing 3s steps(30, end) infinite;
-        }
-
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
+            transform: translateY(20px);
+            animation: slideIn 1s ease forwards;
         }
 
         .input-container input {
@@ -55,14 +99,16 @@
             font-size: 16px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
+            transition: all 0.3s ease;
         }
 
         .input-container input:focus {
             border-color: #ff4b2b;
             outline: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        /* Estilos do Cartão de Vídeo com Animação de Aparição */
+        /* Estilos do Cartão de Vídeo */
         .video-card {
             display: none;
             flex-direction: column;
@@ -75,14 +121,9 @@
             margin-top: 20px;
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            animation: fadeInCard 0.5s ease forwards;
             width: 100%;
             box-sizing: border-box;
-        }
-
-        .video-card.show {
-            opacity: 1;
-            transform: translateY(0);
         }
 
         .video-card img {
@@ -143,7 +184,7 @@
             }
 
             .download-buttons button {
-                padding: 14px 25px;
+                padding: 15px 25px;
                 font-size: 18px;
                 max-width: 200px;
             }
@@ -164,57 +205,33 @@
             }
 
             .download-buttons button {
-                padding: 12px 20px;
+                padding: 15px 20px;
                 font-size: 16px;
                 max-width: 180px;
             }
         }
 
-        /* Estilos do Loader com Porcentagem */
-        .loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 6px solid #ccc;
-            border-top: 6px solid #ff4b2b;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
         }
 
-        .loader p {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #333;
-        }
-
-        .percentage {
-            margin-top: 10px;
-            font-size: 24px;
-            color: #ff4b2b;
-            font-weight: bold;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        @keyframes fadeInCard {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -222,7 +239,7 @@
     <div class="loader" id="loader">
         <div class="spinner"></div>
         <p>Convertendo o vídeo em áudio MP3...</p>
-        <div class="percentage" id="percentage">0%</div>
+        <p class="loader-percent" id="loader-percent">0%</p>
     </div>
 
     <div class="container">
@@ -245,12 +262,12 @@
         document.addEventListener("DOMContentLoaded", function() {
             const urlInput = document.getElementById('url');
             const loader = document.getElementById('loader');
-            const percentage = document.getElementById('percentage');
             const videoCard = document.getElementById('video-card');
             const videoTitle = document.getElementById('video-title');
             const videoThumbnail = document.getElementById('video-thumbnail');
             const downloadMp3Button = document.getElementById('download-mp3');
             const downloadMp4Button = document.getElementById('download-mp4');
+            const loaderPercent = document.getElementById('loader-percent');
 
             urlInput.addEventListener('input', function() {
                 const url = urlInput.value;
@@ -264,9 +281,11 @@
                         .then(data => {
                             videoTitle.textContent = data.titulo;
                             videoThumbnail.src = data.thumbnail;
+                            downloadMp3Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp3'`);
+                            downloadMp4Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp4'`);
 
                             loader.style.display = 'none';
-                            videoCard.classList.add('show');
+                            videoCard.style.display = 'flex';
                         })
                         .catch(error => {
                             loader.style.display = 'none';
@@ -275,31 +294,27 @@
                 }
             });
 
-            function simulateDownloadProgress() {
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += 5;
-                    percentage.textContent = progress + '%';
-
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        loader.style.display = 'none';
-                    }
-                }, 100); // Simula a progressão a cada 100ms
+            // Simular carregamento com porcentagem (exemplo para demonstração)
+            let downloadProgress = 0;
+            function simulateDownload() {
+                downloadProgress += Math.floor(Math.random() * 10) + 1;
+                if (downloadProgress >= 100) {
+                    downloadProgress = 100;
+                }
+                loaderPercent.textContent = `${downloadProgress}%`;
+                if (downloadProgress < 100) {
+                    setTimeout(simulateDownload, 300);
+                }
             }
 
             downloadMp3Button.addEventListener('click', function() {
                 loader.style.display = 'flex';
-                simulateDownloadProgress();
-                // Simule o download por agora, substitua com a lógica real depois
-                setTimeout(() => window.location.href = downloadMp3Button.getAttribute('onclick').split("'")[1], 2000);
+                simulateDownload();
             });
 
             downloadMp4Button.addEventListener('click', function() {
                 loader.style.display = 'flex';
-                simulateDownloadProgress();
-                // Simule o download por agora, substitua com a lógica real depois
-                setTimeout(() => window.location.href = downloadMp4Button.getAttribute('onclick').split("'")[1], 2000);
+                simulateDownload();
             });
         });
     </script>
