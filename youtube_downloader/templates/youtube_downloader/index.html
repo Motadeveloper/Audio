@@ -77,12 +77,23 @@
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 5vw;
             margin-bottom: 20px;
             color: #333;
             animation: fadeIn 1s ease-in-out;
         }
 
+        h1 span {
+            color: red;
+        }
+
+        p {
+            font-size: 3vw;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Estilos do Input */
         .input-container {
             position: relative;
             margin-bottom: 20px;
@@ -172,7 +183,11 @@
 
         @media (max-width: 600px) {
             h1 {
-                font-size: 20px;
+                font-size: 7vw;
+            }
+
+            p {
+                font-size: 4vw;
             }
 
             .input-container input {
@@ -193,7 +208,11 @@
 
         @media (max-width: 400px) {
             h1 {
-                font-size: 18px;
+                font-size: 8vw;
+            }
+
+            p {
+                font-size: 5vw;
             }
 
             .input-container input {
@@ -244,7 +263,8 @@
     </div>
 
     <div class="container">
-        <h1>Baixar Vídeo do YouTube</h1>
+        <h1>Conversor do <span>YouTube</span> para MP3</h1>
+        <p>Baixe e salve vídeos do YouTube gratuitamente</p>
         <div class="input-container">
             <input type="text" id="url" placeholder="Cole o link do YouTube aqui...">
         </div>
