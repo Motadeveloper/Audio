@@ -3,173 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Downloader de Áudio do YouTube</title>
+    <title>Responsive YouTube Downloader</title>
     <style>
+        /* Global Styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             height: 100vh;
-            margin: 0;
-        }
-
-        .converter-container {
-            text-align: center;
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .converter-container h2 {
-            font-size: 24px;
-            color: #333333;
-            margin-bottom: 10px;
-        }
-
-        .converter-box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .converter-box input {
-            width: 400px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .converter-box button {
-            padding: 10px 20px;
-            background-color: #ff4b2b;
-            border: none;
-            border-radius: 4px;
-            color: #ffffff;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .converter-box button:hover {
-            background-color: #ff3a1a;
-        }
-
-        .download-card {
-            display: none;
-            width: 90%;
-            max-width: 600px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            display: flex;
+        }
+
+        /* Loader Styles */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: none;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ccc;
+            border-top: 4px solid #ff4b2b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Container Styles */
+        .container {
             padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-container {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-container input:focus {
+            border-color: #ff4b2b;
+            outline: none;
+        }
+
+        /* Video Card Styles */
+        .video-card {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
             margin-top: 20px;
-            animation: slideIn 0.5s forwards;
+            transition: opacity 0.3s ease-in-out;
         }
 
-        .download-card img {
-            width: 150px;
-            height: auto;
-            border-radius: 8px;
+        .video-card img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
         }
 
-        .download-card-content {
-            flex-grow: 1;
-            padding-left: 20px;
-        }
-
-        .download-card h4 {
+        .video-card h2 {
             font-size: 18px;
-            color: #333333;
-            margin-bottom: 5px;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
         }
 
-        .download-card p {
-            font-size: 14px;
-            color: #777777;
-            margin-bottom: 5px;
-        }
-
-        .download-card-buttons {
+        .download-buttons {
             display: flex;
             gap: 10px;
         }
 
-        .download-card-buttons form {
-            display: inline;
-        }
-
-        .download-card-buttons button {
-            padding: 10px 15px;
-            background-color: #ff4b2b;
+        .download-buttons button {
+            padding: 10px 20px;
             border: none;
-            border-radius: 4px;
-            color: #ffffff;
+            border-radius: 5px;
+            background-color: #ff4b2b;
+            color: white;
             font-size: 14px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            text-decoration: none;
-            text-align: center;
+            transition: background-color 0.3s ease-in-out;
         }
 
-        .download-card-buttons button:hover {
+        .download-buttons button:hover {
             background-color: #ff3a1a;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            .input-container input {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .video-card h2 {
+                font-size: 16px;
+            }
+
+            .download-buttons button {
+                padding: 8px 15px;
+                font-size: 12px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="converter-container">
-        <h2>Downloader de Áudio do YouTube</h2>
-
-        <form method="post" class="converter-box">
-            {% csrf_token %}
-            <input type="text" id="url" name="url" placeholder="Pesquise ou cole o link do YouTube aqui" required>
-            <button type="submit">Pesquisar Vídeo</button>
-        </form>
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
     </div>
 
-    {% if video_info %}
-    <div class="download-card" id="downloadCard" style="display: flex;">
-        <img src="{{ video_info.thumbnail }}" alt="Thumbnail">
-        <div class="download-card-content">
-            <h4>{{ video_info.titulo }}</h4>
-            <p>Formato do áudio: {{ video_info.formato_audio }}</p>
-            <p>Formato do vídeo: {{ video_info.formato_video }}</p>
+    <div class="container">
+        <h1>Baixar Vídeo do YouTube</h1>
+        <div class="input-container">
+            <input type="text" id="url" placeholder="Cole o link do YouTube aqui...">
         </div>
-        <div class="download-card-buttons">
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="url" value="{{ video_info.url }}">
-                <button type="submit" name="formato" value="mp3">Baixar MP3</button>
-            </form>
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="url" value="{{ video_info.url }}">
-                <button type="submit" name="formato" value="mp4">Baixar MP4</button>
-            </form>
+        
+        <div class="video-card" id="video-card">
+            <img id="video-thumbnail" src="" alt="Thumbnail">
+            <h2 id="video-title"></h2>
+            <div class="download-buttons">
+                <button id="download-mp3">Baixar MP3</button>
+                <button id="download-mp4">Baixar MP4</button>
+            </div>
         </div>
     </div>
-    {% endif %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlInput = document.getElementById('url');
+            const loader = document.getElementById('loader');
+            const videoCard = document.getElementById('video-card');
+            const videoTitle = document.getElementById('video-title');
+            const videoThumbnail = document.getElementById('video-thumbnail');
+            const downloadMp3Button = document.getElementById('download-mp3');
+            const downloadMp4Button = document.getElementById('download-mp4');
+
+            urlInput.addEventListener('input', function() {
+                const url = urlInput.value;
+
+                if (url) {
+                    loader.style.display = 'flex';
+                    videoCard.style.display = 'none';
+
+                    fetch(`/get_video_info/?url=${encodeURIComponent(url)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            videoTitle.textContent = data.title;
+                            videoThumbnail.src = data.thumbnail;
+                            downloadMp3Button.setAttribute('onclick', `window.location.href='/download/?url=${encodeURIComponent(url)}&format=mp3'`);
+                            downloadMp4Button.setAttribute('onclick', `window.location.href='/download/?url=${encodeURIComponent(url)}&format=mp4'`);
+
+                            loader.style.display = 'none';
+                            videoCard.style.display = 'flex';
+                        })
+                        .catch(error => {
+                            loader.style.display = 'none';
+                            console.error('Error fetching video info:', error);
+                        });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
