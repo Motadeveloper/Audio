@@ -54,6 +54,7 @@
             margin-top: 10px;
             font-size: 16px;
             color: #555;
+            display: none;
         }
 
         @keyframes spin {
@@ -238,7 +239,7 @@
 <body>
     <div class="loader" id="loader">
         <div class="spinner"></div>
-        <p>Convertendo o vídeo em áudio MP3...</p>
+        <p id="loader-message">Buscando vídeo no YouTube...</p>
         <p class="loader-percent" id="loader-percent">0%</p>
     </div>
 
@@ -262,6 +263,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const urlInput = document.getElementById('url');
             const loader = document.getElementById('loader');
+            const loaderMessage = document.getElementById('loader-message');
             const videoCard = document.getElementById('video-card');
             const videoTitle = document.getElementById('video-title');
             const videoThumbnail = document.getElementById('video-thumbnail');
@@ -273,6 +275,8 @@
                 const url = urlInput.value;
 
                 if (url) {
+                    loaderMessage.textContent = "Buscando vídeo no YouTube...";
+                    loaderPercent.style.display = 'none';
                     loader.style.display = 'flex';
                     videoCard.style.display = 'none';
 
@@ -300,6 +304,7 @@
                 downloadProgress += Math.floor(Math.random() * 10) + 1;
                 if (downloadProgress >= 100) {
                     downloadProgress = 100;
+                    loader.style.display = 'none';
                 }
                 loaderPercent.textContent = `${downloadProgress}%`;
                 if (downloadProgress < 100) {
@@ -308,11 +313,17 @@
             }
 
             downloadMp3Button.addEventListener('click', function() {
+                loaderMessage.textContent = "Baixando MP3...";
+                loaderPercent.style.display = 'block';
+                downloadProgress = 0;
                 loader.style.display = 'flex';
                 simulateDownload();
             });
 
             downloadMp4Button.addEventListener('click', function() {
+                loaderMessage.textContent = "Baixando MP4...";
+                loaderPercent.style.display = 'block';
+                downloadProgress = 0;
                 loader.style.display = 'flex';
                 simulateDownload();
             });
