@@ -48,7 +48,7 @@
             font-size: 18px;
             color: #333;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            animation: slideUp 0.5s forwards;
         }
 
         @keyframes spin {
@@ -239,7 +239,8 @@
 <body>
     <div class="loader" id="loader">
         <div class="spinner"></div>
-        <p class="loader-message" id="loader-message"></p>
+        <p id="loader-message">Buscando vídeo no YouTube...</p>
+        <p class="loader-message" id="extra-message"></p>
     </div>
 
     <div class="container">
@@ -268,12 +269,14 @@
             const videoThumbnail = document.getElementById('video-thumbnail');
             const downloadMp3Button = document.getElementById('download-mp3');
             const downloadMp4Button = document.getElementById('download-mp4');
+            const extraMessage = document.getElementById('extra-message');
 
             urlInput.addEventListener('input', function() {
                 const url = urlInput.value;
 
                 if (url) {
                     loaderMessage.textContent = "Buscando vídeo no YouTube...";
+                    extraMessage.style.display = 'none';
                     loader.style.display = 'flex';
                     videoCard.style.display = 'none';
 
@@ -307,14 +310,10 @@
 
                 function showNextMessage() {
                     if (currentMessageIndex < messages.length) {
-                        loaderMessage.textContent = messages[currentMessageIndex];
-                        loaderMessage.style.opacity = '0';
-                        loaderMessage.style.transition = 'none';
-                        loaderMessage.style.animation = 'none';
-                        requestAnimationFrame(() => {
-                            loaderMessage.style.transition = 'opacity 0.5s ease-in-out';
-                            loaderMessage.style.opacity = '1';
-                        });
+                        extraMessage.textContent = messages[currentMessageIndex];
+                        extraMessage.style.display = 'block';
+                        extraMessage.style.opacity = '0';
+                        extraMessage.style.animation = 'slideUp 0.5s forwards';
                         currentMessageIndex++;
                         setTimeout(showNextMessage, 2000); // Tempo para exibir cada mensagem
                     } else {
@@ -322,6 +321,7 @@
                     }
                 }
 
+                extraMessage.style.display = 'none';
                 showNextMessage();
             }
 
