@@ -45,7 +45,7 @@
 
         .loader-message {
             margin-top: 20px;
-            font-size: 5vw; /* Ajustado para se adaptar à largura da tela */
+            font-size: 18px;
             color: #333;
             opacity: 0;
             animation: slideUp 0.5s forwards;
@@ -77,10 +77,10 @@
         }
 
         h1 {
-            font-size: 10vw; /* Ajustado para se adaptar à largura da tela */
+            font-size: 5vw;
             margin-bottom: 20px;
             color: #333;
-            animation: fadeInLarge 1s ease-in-out;
+            animation: fadeIn 1s ease-in-out;
         }
 
         h1 span {
@@ -88,33 +88,9 @@
         }
 
         p {
-            font-size: 3vw; /* Mantido pequeno, mas ainda adaptável */
+            font-size: 3vw;
             color: #333;
             margin-bottom: 20px;
-            animation: slideUpSmall 1s ease-in-out forwards;
-        }
-
-        /* Animações Personalizadas */
-        @keyframes fadeInLarge {
-            0% {
-                opacity: 0;
-                transform: scale(0.8); /* Começa com um tamanho menor */
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1); /* Anima até o tamanho normal */
-            }
-        }
-
-        @keyframes slideUpSmall {
-            0% {
-                opacity: 0;
-                transform: translateY(30px); /* Começa mais baixo */
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0); /* Anima para a posição normal */
-            }
         }
 
         /* Estilos do Input */
@@ -129,10 +105,10 @@
 
         .input-container input {
             width: 100%;
-            padding: 3vw; /* Ajustado para se adaptar à largura da tela */
+            padding: 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 5vw; /* Ajustado para se adaptar à largura da tela */
+            font-size: 16px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
             transition: all 0.3s ease;
@@ -150,7 +126,7 @@
             flex-direction: column;
             align-items: center;
             background-color: #fff;
-            padding: 4vw; /* Ajustado para se adaptar à largura da tela */
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             max-width: 100%;
@@ -165,35 +141,35 @@
         .video-card img {
             max-width: 100%;
             border-radius: 10px;
-            margin-bottom: 3vw; /* Ajustado para se adaptar à largura da tela */
+            margin-bottom: 15px;
         }
 
         .video-card h2 {
-            font-size: 6vw; /* Ajustado para se adaptar à largura da tela */
+            font-size: 18px;
             color: #333;
-            margin-bottom: 3vw; /* Ajustado para se adaptar à largura da tela */
+            margin-bottom: 15px;
             text-align: center;
         }
 
         .download-buttons {
             display: flex;
-            gap: 2vw; /* Ajustado para se adaptar à largura da tela */
+            gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
         }
 
         .download-buttons button {
-            padding: 4vw 6vw; /* Ajustado para se adaptar à largura da tela */
+            padding: 12px 20px;
             border: none;
             border-radius: 5px;
             background-color: #ff4b2b;
             color: white;
-            font-size: 5vw; /* Ajustado para se adaptar à largura da tela */
+            font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease-in-out;
             flex: 1;
-            max-width: 100%;
+            max-width: 160px;
             box-sizing: border-box;
         }
 
@@ -207,49 +183,51 @@
 
         @media (max-width: 600px) {
             h1 {
-                font-size: 12vw; /* Ainda grande em telas menores */
-            }
-
-            p {
-                font-size: 3vw; /* Mantido pequeno */
-            }
-
-            .input-container input {
-                padding: 4vw;
-                font-size: 6vw;
-            }
-
-            .video-card h2 {
                 font-size: 7vw;
             }
 
+            p {
+                font-size: 4vw;
+            }
+
+            .input-container input {
+                padding: 20px;
+                font-size: 18px;
+            }
+
+            .video-card h2 {
+                font-size: 16px;
+            }
+
             .download-buttons button {
-                padding: 5vw 7vw;
-                font-size: 6vw;
+                padding: 15px 25px;
+                font-size: 18px;
+                max-width: 200px;
             }
         }
 
         @media (max-width: 400px) {
             h1 {
-                font-size: 14vw; /* Ajustado para caber bem em telas muito pequenas */
-            }
-
-            p {
-                font-size: 3vw; /* Mantido pequeno */
-            }
-
-            .input-container input {
-                padding: 5vw;
-                font-size: 7vw;
-            }
-
-            .video-card h2 {
                 font-size: 8vw;
             }
 
+            p {
+                font-size: 5vw;
+            }
+
+            .input-container input {
+                padding: 18px;
+                font-size: 16px;
+            }
+
+            .video-card h2 {
+                font-size: 14px;
+            }
+
             .download-buttons button {
-                padding: 6vw 8vw;
-                font-size: 7vw;
+                padding: 15px 20px;
+                font-size: 16px;
+                max-width: 180px;
             }
         }
 
@@ -257,6 +235,15 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
             }
         }
 
