@@ -77,10 +77,10 @@
         }
 
         h1 {
-            font-size: 7vw; /* Tamanho grande para todos os dispositivos */
+            font-size: 36px; /* Defina o tamanho grande que deseja */
             margin-bottom: 20px;
             color: #333;
-            animation: fadeIn 1s ease-in-out;
+            animation: fadeInLarge 1s ease-in-out;
         }
 
         h1 span {
@@ -88,32 +88,32 @@
         }
 
         p {
-            font-size: 2.5vw; /* Tamanho pequeno para todos os dispositivos */
+            font-size: 14px; /* Defina o tamanho pequeno que deseja */
             color: #333;
             margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(50px);
-            animation: fadeInUp 1.5s ease forwards;
-            animation-delay: 1s;
+            animation: slideUpSmall 1s ease-in-out forwards;
         }
 
-        @keyframes fadeIn {
-            from {
+        /* Animações Personalizadas */
+        @keyframes fadeInLarge {
+            0% {
                 opacity: 0;
+                transform: scale(0.8); /* Começa com um tamanho menor */
             }
-            to {
+            100% {
                 opacity: 1;
+                transform: scale(1); /* Anima até o tamanho normal */
             }
         }
 
-        @keyframes fadeInUp {
-            from {
+        @keyframes slideUpSmall {
+            0% {
                 opacity: 0;
-                transform: translateY(50px);
+                transform: translateY(30px); /* Começa mais baixo */
             }
-            to {
+            100% {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0); /* Anima para a posição normal */
             }
         }
 
@@ -125,7 +125,6 @@
             opacity: 0;
             transform: translateY(20px);
             animation: slideIn 1s ease forwards;
-            animation-delay: 2s;
         }
 
         .input-container input {
@@ -208,11 +207,11 @@
 
         @media (max-width: 600px) {
             h1 {
-                font-size: 8vw;
+                font-size: 36px; /* Tamanho fixo para dispositivos menores */
             }
 
             p {
-                font-size: 3.5vw;
+                font-size: 14px; /* Tamanho fixo para dispositivos menores */
             }
 
             .input-container input {
@@ -233,11 +232,11 @@
 
         @media (max-width: 400px) {
             h1 {
-                font-size: 9vw;
+                font-size: 36px; /* Tamanho fixo para dispositivos menores */
             }
 
             p {
-                font-size: 4vw;
+                font-size: 14px; /* Tamanho fixo para dispositivos menores */
             }
 
             .input-container input {
@@ -326,7 +325,6 @@
 
                             loader.style.display = 'none';
                             videoCard.style.display = 'flex';
-                            videoCard.classList.add('visible');
                         })
                         .catch(error => {
                             loader.style.display = 'none';
