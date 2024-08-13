@@ -32,7 +32,6 @@
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            animation: fadeIn 0.5s ease-in-out;
         }
 
         .spinner {
@@ -54,11 +53,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         @keyframes pulse {
@@ -89,13 +83,12 @@
 
         .input-container input {
             width: 100%;
-            padding: 15px;
+            padding: 15px 60px 15px 15px; /* Espaço à direita para o botão */
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
-            padding-right: 60px; /* Espaço para o botão de colar */
         }
 
         .input-container input:focus {
@@ -105,26 +98,16 @@
 
         .paste-button {
             position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
+            right: 0;
+            top: 0;
+            height: 100%;
             background-color: #ff4b2b;
             color: white;
             border: none;
-            border-radius: 5px;
-            padding: 8px 12px;
+            border-radius: 0 5px 5px 0;
+            padding: 0 15px;
             cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s ease-in-out, transform 0.2s ease;
-        }
-
-        .paste-button:hover {
-            background-color: #ff3a1a;
-            transform: scale(1.05);
-        }
-
-        .paste-button:active {
-            transform: scale(0.95);
+            font-size: 16px;
         }
 
         /* Video Card Styles */
@@ -173,7 +156,7 @@
             color: white;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+            transition: background-color 0.3s ease-in-out;
             flex: 1;
             max-width: 160px;
             box-sizing: border-box;
@@ -181,11 +164,10 @@
 
         .download-buttons button:hover {
             background-color: #ff3a1a;
-            transform: scale(1.05);
         }
 
         .download-buttons button:active {
-            transform: scale(0.95);
+            background-color: #e63900;
         }
 
         @media (max-width: 600px) {
@@ -194,7 +176,7 @@
             }
 
             .input-container input {
-                padding: 12px;
+                padding: 12px 50px 12px 12px;
                 font-size: 14px;
             }
 
@@ -215,7 +197,7 @@
             }
 
             .input-container input {
-                padding: 10px;
+                padding: 10px 45px 10px 10px;
                 font-size: 12px;
             }
 
