@@ -93,7 +93,7 @@
             caret-color: transparent; /* Remove o cursor de texto */
         }
 
-        .paste-button {
+        .open-modal-button {
             position: absolute;
             right: 0;
             top: 0;
@@ -107,10 +107,47 @@
             font-size: 16px;
         }
 
-        .instruction {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #555;
+        /* Estilos do Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .modal button {
+            padding: 10px 20px;
+            background-color: #ff4b2b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         /* Estilos do Cartão de Vídeo */
@@ -224,11 +261,18 @@
     <div class="container">
         <h1>Baixar Vídeo do YouTube</h1>
         <div class="input-container">
-            <input type="text" id="url" placeholder="Cole o link do YouTube aqui...">
-            <button class="paste-button" id="paste-button">Colar</button>
+            <input type="text" id="url" placeholder="Cole o link do YouTube aqui..." readonly>
+            <button class="open-modal-button" id="open-modal-button">Inserir Link</button>
         </div>
-        <p class="instruction">Por favor, cole manualmente o link caso o botão de colar não funcione.</p>
         
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <h2>Insira o link do vídeo</h2>
+                <input type="text" id="modal-url" placeholder="Cole o link do YouTube aqui...">
+                <button id="save-url-button">Salvar</button>
+            </div>
+        </div>
+
         <div class="video-card" id="video-card">
             <img id="video-thumbnail" src="" alt="Thumbnail do vídeo">
             <h2 id="video-title"></h2>
@@ -242,7 +286,10 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const urlInput = document.getElementById('url');
-            const pasteButton = document.getElementById('paste-button');
+            const openModalButton = document.getElementById('open-modal-button');
+            const modal = document.getElementById('modal');
+            const modalUrlInput = document.getElementById('modal-url');
+            const saveUrlButton = document.getElementById('save-url-button');
             const loader = document.getElementById('loader');
             const videoCard = document.getElementById('video-card');
             const videoTitle = document.getElementById('video-title');
@@ -250,19 +297,17 @@
             const downloadMp3Button = document.getElementById('download-mp3');
             const downloadMp4Button = document.getElementById('download-mp4');
 
-            // Botão "Colar"
-            pasteButton.addEventListener('click', async function() {
-                try {
-                    const text = await navigator.clipboard.readText();
-                    if (text) {
-                        urlInput.value = text;
-                        urlInput.dispatchEvent(new Event('input')); // Disparar o evento de input
-                    } else {
-                        alert('A área de transferência está vazia.');
-                    }
-                } catch (err) {
-                    console.error('Failed to read clipboard contents: ', err);
-                    alert('Não foi possível acessar o conteúdo da área de transferência. Permita o acesso ao clipboard.');
+            openModalButton.addEventListener('click', function() {
+                modal.style.display = 'flex';
+            });
+
+            saveUrlButton.addEventListener('click', function() {
+                const url = modalUrlInput.value;
+                if (url) {
+                    urlInput.value = url;
+                    modal.style.display = 'none';
+                    modalUrlInput.value = '';
+                    urlInput.dispatchEvent(new Event('input')); // Disparar o evento de input
                 }
             });
 
@@ -290,6 +335,12 @@
                         });
                 }
             });
+
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
         });
     </script>
 </body>
