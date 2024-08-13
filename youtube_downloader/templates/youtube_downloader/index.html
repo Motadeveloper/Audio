@@ -43,24 +43,10 @@
             animation: spin 1s linear infinite;
         }
 
-        .loader p {
+        .loader-message {
             margin-top: 20px;
             font-size: 18px;
             color: #333;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        .loader-percent {
-            margin-top: 10px;
-            font-size: 16px;
-            color: #555;
-        }
-
-        .loader-message {
-            margin-top: 10px;
-            font-size: 16px;
-            color: #555;
-            display: none;
             opacity: 0;
             animation: slideUp 0.5s forwards;
         }
@@ -68,11 +54,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
         }
 
         @keyframes slideUp {
@@ -259,7 +240,6 @@
     <div class="loader" id="loader">
         <div class="spinner"></div>
         <p id="loader-message">Buscando vídeo no YouTube...</p>
-        <p class="loader-percent" id="loader-percent">0%</p>
         <p class="loader-message" id="extra-message"></p>
     </div>
 
@@ -289,23 +269,17 @@
             const videoThumbnail = document.getElementById('video-thumbnail');
             const downloadMp3Button = document.getElementById('download-mp3');
             const downloadMp4Button = document.getElementById('download-mp4');
-            const loaderPercent = document.getElementById('loader-percent');
             const extraMessage = document.getElementById('extra-message');
 
-            function updateLoaderDisplay() {
-                loader.style.display = 'flex';
-                videoCard.style.display = 'none';
-            }
-
-            function hideLoaderAndShowCard() {
-                loader.style.display = 'none';
-                videoCard.style.display = 'flex';
-            }
-
             urlInput.addEventListener('input', function() {
-                const url = urlInput.value.trim();
+                const url = urlInput.value;
+
                 if (url) {
-                    updateLoaderDisplay();
+                    loaderMessage.textContent = "Buscando vídeo no YouTube...";
+                    extraMessage.style.display = 'none';
+                    loader.style.display = 'flex';
+                    videoCard.style.display = 'none';
+
                     fetch(`/get_video_info/?url=${encodeURIComponent(url)}`)
                         .then(response => response.json())
                         .then(data => {
@@ -313,53 +287,52 @@
                             videoThumbnail.src = data.thumbnail;
                             downloadMp3Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp3'`);
                             downloadMp4Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp4'`);
-                            hideLoaderAndShowCard();
+
+                            loader.style.display = 'none';
+                            videoCard.style.display = 'flex';
                         })
                         .catch(error => {
+                            loader.style.display = 'none';
                             console.error('Error fetching video info:', error);
-                            loaderMessage.textContent = "Erro ao buscar informações do vídeo.";
                         });
                 }
             });
 
             function startDownloadSimulation() {
-                loaderPercent.style.display = 'block';
-                extraMessage.style.display = 'none';
-                let downloadProgress = 0;
+                const messages = [
+                    "Aguarde, realizando o download...",
+                    "Falta pouco...",
+                    "Finalizando o download...",
+                    "Divulgue nossa ferramenta para os amigos!"
+                ];
 
-                const interval = setInterval(() => {
-                    downloadProgress += 1; // Incrementa 1% a cada 50ms
-                    loaderPercent.textContent = `${downloadProgress}%`;
+                let currentMessageIndex = 0;
 
-                    if (downloadProgress === 99) {
-                        clearInterval(interval);
-                        extraMessage.textContent = "Aguarde mais um pouco...";
+                function showNextMessage() {
+                    if (currentMessageIndex < messages.length) {
+                        extraMessage.textContent = messages[currentMessageIndex];
                         extraMessage.style.display = 'block';
-
-                        setTimeout(() => {
-                            extraMessage.style.display = 'none';
-                            extraMessage.textContent = "Finalizando o download...";
-                            extraMessage.style.display = 'block';
-
-                            setTimeout(() => {
-                                loaderPercent.textContent = '100%';
-                                loader.style.display = 'none';
-                            }, 1500); // Aguarda 1,5s para finalizar o download
-                        }, 2000); // Aguarda 2s antes de mostrar "Finalizando o download"
+                        extraMessage.style.opacity = '0';
+                        extraMessage.style.animation = 'slideUp 0.5s forwards';
+                        currentMessageIndex++;
+                        setTimeout(showNextMessage, 2000); // Tempo para exibir cada mensagem
+                    } else {
+                        loader.style.display = 'none';
                     }
-                }, 50); // Atualiza a cada 50ms para uma simulação mais suave
+                }
+
+                extraMessage.style.display = 'none';
+                showNextMessage();
             }
 
             downloadMp3Button.addEventListener('click', function() {
                 loaderMessage.textContent = "Baixando MP3...";
-                loaderPercent.textContent = '0%';
                 loader.style.display = 'flex';
                 startDownloadSimulation();
             });
 
             downloadMp4Button.addEventListener('click', function() {
                 loaderMessage.textContent = "Baixando MP4...";
-                loaderPercent.textContent = '0%';
                 loader.style.display = 'flex';
                 startDownloadSimulation();
             });
