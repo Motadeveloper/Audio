@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Responsive YouTube Downloader</title>
     <style>
-        /* Global Styles */
+        /* Estilos Globais */
         body {
             margin: 0;
             padding: 0;
@@ -19,7 +19,7 @@
             overflow-x: hidden;
         }
 
-        /* Loader Styles */
+        /* Estilos do Loader */
         .loader {
             position: fixed;
             top: 0;
@@ -60,7 +60,7 @@
             50% { opacity: 0.5; }
         }
 
-        /* Container Styles */
+        /* Estilos do Container */
         .container {
             padding: 20px;
             text-align: center;
@@ -83,17 +83,14 @@
 
         .input-container input {
             width: 100%;
-            padding: 15px 60px 15px 15px; /* Espaço à direita para o botão */
+            padding: 15px 60px 15px 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
-        }
-
-        .input-container input:focus {
-            border-color: #ff4b2b;
-            outline: none;
+            pointer-events: none; /* Impede o foco no campo de entrada */
+            caret-color: transparent; /* Remove o cursor de texto */
         }
 
         .paste-button {
@@ -110,7 +107,13 @@
             font-size: 16px;
         }
 
-        /* Video Card Styles */
+        .instruction {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Estilos do Cartão de Vídeo */
         .video-card {
             display: none;
             flex-direction: column;
@@ -224,6 +227,7 @@
             <input type="text" id="url" placeholder="Cole o link do YouTube aqui...">
             <button class="paste-button" id="paste-button">Colar</button>
         </div>
+        <p class="instruction">Por favor, cole manualmente o link caso o botão de colar não funcione.</p>
         
         <div class="video-card" id="video-card">
             <img id="video-thumbnail" src="" alt="Thumbnail do vídeo">
@@ -273,7 +277,7 @@
                         .then(response => response.json())
                         .then(data => {
                             videoTitle.textContent = data.titulo;
-                            videoThumbnail.src = data.thumbnail;  // Usando a URL da thumbnail
+                            videoThumbnail.src = data.thumbnail;
                             downloadMp3Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp3'`);
                             downloadMp4Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp4'`);
 
