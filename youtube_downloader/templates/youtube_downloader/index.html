@@ -126,11 +126,10 @@
             box-sizing: border-box;
         }
 
-        .video-card video {
+        .video-card img {
             max-width: 100%;
             border-radius: 10px;
             margin-bottom: 15px;
-            background-color: #000;
         }
 
         .video-card h2 {
@@ -227,7 +226,7 @@
         </div>
         
         <div class="video-card" id="video-card">
-            <video id="video-preview" muted loop controls></video> <!-- Adicionado "controls" para controle básico -->
+            <img id="video-thumbnail" src="" alt="Thumbnail do vídeo">
             <h2 id="video-title"></h2>
             <div class="download-buttons">
                 <button id="download-mp3">Baixar MP3</button>
@@ -243,20 +242,19 @@
             const loader = document.getElementById('loader');
             const videoCard = document.getElementById('video-card');
             const videoTitle = document.getElementById('video-title');
-            const videoPreview = document.getElementById('video-preview');
+            const videoThumbnail = document.getElementById('video-thumbnail');
             const downloadMp3Button = document.getElementById('download-mp3');
             const downloadMp4Button = document.getElementById('download-mp4');
 
             // Botão "Colar"
-            pasteButton.addEventListener('click', async function() {
-                try {
-                    const text = await navigator.clipboard.readText();
+            pasteButton.addEventListener('click', function() {
+                navigator.clipboard.readText().then(text => {
                     urlInput.value = text;
                     urlInput.dispatchEvent(new Event('input')); // Disparar o evento de input
-                } catch (err) {
+                }).catch(err => {
                     console.error('Failed to read clipboard contents: ', err);
                     alert('Não foi possível acessar o conteúdo da área de transferência. Permita o acesso ao clipboard.');
-                }
+                });
             });
 
             urlInput.addEventListener('input', function() {
@@ -270,8 +268,10 @@
                         .then(response => response.json())
                         .then(data => {
                             videoTitle.textContent = data.titulo;
-                            videoPreview.src = data.preview_url;  // Supondo que `preview_url` seja a URL do vídeo
-                            videoPreview.load();  // Garantir que o vídeo seja carregado
+                            videoThumbnail.src = data.thumbnail;  // Usando a URL da thumbnail
+                            downloadMp3Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp3'`);
+                            downloadMp4Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp4'`);
+
                             loader.style.display = 'none';
                             videoCard.style.display = 'flex';
                         })
