@@ -292,16 +292,20 @@
             const loaderPercent = document.getElementById('loader-percent');
             const extraMessage = document.getElementById('extra-message');
 
+            function updateLoaderDisplay() {
+                loader.style.display = 'flex';
+                videoCard.style.display = 'none';
+            }
+
+            function hideLoaderAndShowCard() {
+                loader.style.display = 'none';
+                videoCard.style.display = 'flex';
+            }
+
             urlInput.addEventListener('input', function() {
-                const url = urlInput.value;
-
+                const url = urlInput.value.trim();
                 if (url) {
-                    loaderMessage.textContent = "Buscando vídeo no YouTube...";
-                    loaderPercent.style.display = 'none';
-                    extraMessage.style.display = 'none';
-                    loader.style.display = 'flex';
-                    videoCard.style.display = 'none';
-
+                    updateLoaderDisplay();
                     fetch(`/get_video_info/?url=${encodeURIComponent(url)}`)
                         .then(response => response.json())
                         .then(data => {
@@ -309,13 +313,11 @@
                             videoThumbnail.src = data.thumbnail;
                             downloadMp3Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp3'`);
                             downloadMp4Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp4'`);
-
-                            loader.style.display = 'none';
-                            videoCard.style.display = 'flex';
+                            hideLoaderAndShowCard();
                         })
                         .catch(error => {
-                            loader.style.display = 'none';
                             console.error('Error fetching video info:', error);
+                            loaderMessage.textContent = "Erro ao buscar informações do vídeo.";
                         });
                 }
             });
