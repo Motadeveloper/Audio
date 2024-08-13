@@ -7,16 +7,17 @@ from io import BytesIO
 
 def obter_informacoes_video(url):
     ydl_opts = {
-        'format': 'bestaudio/best',
+        'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio',
         'quiet': True,  # Suprimir a saída do yt-dlp
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info_dict = ydl.extract_info(url, download=False)
+        video_url = info_dict['url']
         return {
             'titulo': info_dict.get('title', 'Título Desconhecido'),
             'thumbnail': info_dict.get('thumbnail', ''),
-            'extensoes': info_dict.get('ext', ''),
+            'preview_url': video_url,  # URL para pré-visualização
             'formato_audio': '320kbps',
             'formato_video': info_dict.get('format', 'Desconhecido').split(' ')[-1],
             'url': url,

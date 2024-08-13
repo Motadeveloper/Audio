@@ -227,7 +227,7 @@
         </div>
         
         <div class="video-card" id="video-card">
-            <video id="video-preview" muted loop></video>
+            <video id="video-preview" muted loop controls></video> <!-- Adicionado "controls" para controle básico -->
             <h2 id="video-title"></h2>
             <div class="download-buttons">
                 <button id="download-mp3">Baixar MP3</button>
@@ -255,6 +255,7 @@
                     urlInput.dispatchEvent(new Event('input')); // Disparar o evento de input
                 } catch (err) {
                     console.error('Failed to read clipboard contents: ', err);
+                    alert('Não foi possível acessar o conteúdo da área de transferência. Permita o acesso ao clipboard.');
                 }
             });
 
@@ -270,10 +271,7 @@
                         .then(data => {
                             videoTitle.textContent = data.titulo;
                             videoPreview.src = data.preview_url;  // Supondo que `preview_url` seja a URL do vídeo
-                            videoPreview.play();
-                            downloadMp3Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp3'`);
-                            downloadMp4Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp4'`);
-
+                            videoPreview.load();  // Garantir que o vídeo seja carregado
                             loader.style.display = 'none';
                             videoCard.style.display = 'flex';
                         })
