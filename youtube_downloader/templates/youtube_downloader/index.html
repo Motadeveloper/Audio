@@ -314,7 +314,7 @@
                 let downloadProgress = 0;
 
                 const interval = setInterval(() => {
-                    downloadProgress += Math.floor(Math.random() * 5) + 5; // Incrementa de 5 a 9%
+                    downloadProgress += Math.floor(Math.random() * 10) + 1; // Incrementa de 1 a 10%
                     if (downloadProgress >= 99) {
                         downloadProgress = 99;
                         loaderPercent.textContent = `${downloadProgress}%`;
