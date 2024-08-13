@@ -15,8 +15,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* Loader Styles */
@@ -52,6 +52,9 @@
         .container {
             padding: 20px;
             text-align: center;
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
         }
 
         h1 {
@@ -63,6 +66,7 @@
         .input-container {
             margin-bottom: 20px;
             position: relative;
+            width: 100%;
         }
 
         .input-container input {
@@ -72,6 +76,7 @@
             border-radius: 5px;
             font-size: 16px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
         }
 
         .input-container input:focus {
@@ -91,6 +96,8 @@
             max-width: 100%;
             margin-top: 20px;
             transition: opacity 0.3s ease-in-out;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .video-card img {
@@ -109,6 +116,9 @@
         .download-buttons {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
         }
 
         .download-buttons button {
@@ -120,6 +130,9 @@
             font-size: 14px;
             cursor: pointer;
             transition: background-color 0.3s ease-in-out;
+            flex: 1;
+            max-width: 150px;
+            box-sizing: border-box;
         }
 
         .download-buttons button:hover {
@@ -132,7 +145,7 @@
             }
 
             .input-container input {
-                padding: 10px;
+                padding: 12px;
                 font-size: 14px;
             }
 
@@ -141,8 +154,30 @@
             }
 
             .download-buttons button {
-                padding: 8px 15px;
+                padding: 8px 12px;
                 font-size: 12px;
+                max-width: 100px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 18px;
+            }
+
+            .input-container input {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .video-card h2 {
+                font-size: 14px;
+            }
+
+            .download-buttons button {
+                padding: 6px 10px;
+                font-size: 10px;
+                max-width: 80px;
             }
         }
     </style>
