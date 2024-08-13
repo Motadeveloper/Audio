@@ -80,20 +80,11 @@
             font-size: 7vw; /* Tamanho grande para todos os dispositivos */
             margin-bottom: 20px;
             color: #333;
-            animation: typing 2s steps(40, end), blink-caret .75s step-end infinite;
-            white-space: nowrap;
-            overflow: hidden;
-            border-right: .15em solid #333;
+            animation: fadeIn 1s ease-in-out;
         }
 
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @keyframes blink-caret {
-            from, to { border-color: transparent; }
-            50% { border-color: #333; }
+        h1 span {
+            color: red;
         }
 
         p {
@@ -103,10 +94,23 @@
             opacity: 0;
             transform: translateY(50px);
             animation: fadeInUp 1.5s ease forwards;
-            animation-delay: 2.5s;
+            animation-delay: 1s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -121,6 +125,7 @@
             opacity: 0;
             transform: translateY(20px);
             animation: slideIn 1s ease forwards;
+            animation-delay: 2s;
         }
 
         .input-container input {
@@ -232,7 +237,7 @@
             }
 
             p {
-                font-size: 4.5vw;
+                font-size: 4vw;
             }
 
             .input-container input {
@@ -258,32 +263,11 @@
             }
         }
 
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
         @keyframes fadeInCard {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
-
-        /* Efeito de aparecer ao rolar a página */
-        .scroll-fade-in {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-        }
-
-        .scroll-fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
         }
     </style>
 </head>
@@ -301,7 +285,7 @@
             <input type="text" id="url" placeholder="Cole o link do YouTube aqui...">
         </div>
         
-        <div class="video-card scroll-fade-in" id="video-card">
+        <div class="video-card" id="video-card">
             <img id="video-thumbnail" src="" alt="Thumbnail do vídeo">
             <h2 id="video-title"></h2>
             <div class="download-buttons">
