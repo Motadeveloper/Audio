@@ -189,10 +189,10 @@
                     fetch(`/get_video_info/?url=${encodeURIComponent(url)}`)
                         .then(response => response.json())
                         .then(data => {
-                            videoTitle.textContent = data.title;
+                            videoTitle.textContent = data.titulo;
                             videoThumbnail.src = data.thumbnail;
-                            downloadMp3Button.setAttribute('onclick', `window.location.href='/download/?url=${encodeURIComponent(url)}&format=mp3'`);
-                            downloadMp4Button.setAttribute('onclick', `window.location.href='/download/?url=${encodeURIComponent(url)}&format=mp4'`);
+                            downloadMp3Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp3'`);
+                            downloadMp4Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp4'`);
 
                             loader.style.display = 'none';
                             videoCard.style.display = 'flex';
