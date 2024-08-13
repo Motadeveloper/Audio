@@ -94,6 +94,20 @@
             animation: fadeInUp 1s ease-in-out;
         }
 
+        /* Ajustes para telas maiores */
+        @media (min-width: 1024px) {
+            p {
+                font-size: 1.5vw; /* Diminui o tamanho do parágrafo em telas maiores */
+            }
+        }
+
+        /* Ajustes para dispositivos móveis */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 8vw; /* Aumenta o tamanho do h1 em dispositivos móveis */
+            }
+        }
+
         /* Estilos do Input */
         .input-container {
             position: relative;
@@ -182,40 +196,7 @@
             background-color: #e63900;
         }
 
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 7vw;
-            }
-
-            p {
-                font-size: 3.5vw;
-            }
-
-            .input-container input {
-                padding: 20px;
-                font-size: 18px;
-            }
-
-            .video-card h2 {
-                font-size: 16px;
-            }
-
-            .download-buttons button {
-                padding: 15px 25px;
-                font-size: 18px;
-                max-width: 200px;
-            }
-        }
-
         @media (max-width: 400px) {
-            h1 {
-                font-size: 8vw;
-            }
-
-            p {
-                font-size: 4vw;
-            }
-
             .input-container input {
                 padding: 18px;
                 font-size: 16px;
