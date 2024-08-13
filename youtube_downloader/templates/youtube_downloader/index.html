@@ -141,31 +141,9 @@
         <form method="post" class="converter-box">
             {% csrf_token %}
             <input type="text" id="url" name="url" placeholder="Pesquise ou cole o link do YouTube aqui" required>
-            <button type="submit">Baixar Áudio</button>
+            <button type="submit" name="formato" value="mp3">Baixar MP3</button>
+            <button type="submit" name="formato" value="mp4">Baixar MP4</button>
         </form>
     </div>
-
-    {% if success %}
-    <div class="download-card" id="downloadCard">
-        <img src="{{ thumbnail }}" alt="Thumbnail">
-        <div class="download-card-content">
-            <h4>{{ titulo_video }}</h4>
-            <p>Audio Quality: {{ audio_quality }}</p>
-            <p>Video Quality: {{ video_quality }}</p>
-        </div>
-        <div class="download-card-buttons">
-            <a href="{{ MEDIA_URL }}{{ nome_mp3 }}" download>Download MP3</a>
-            <a href="{{ MEDIA_URL }}{{ nome_mp4 }}" download>Download MP4</a>
-        </div>
-    </div>
-    {% endif %}
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            {% if success %}
-                document.getElementById('downloadCard').style.display = 'flex';
-            {% endif %}
-        });
-    </script>
 </body>
 </html>

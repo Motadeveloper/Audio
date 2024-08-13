@@ -1,53 +1,46 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 import yt_dlp
 import uuid
-import os
-from django.conf import settings
+from io import BytesIO
 
-def baixar_audio_video(url):
+def baixar_audio_video(url, formato):
     nome_base = str(uuid.uuid4())  # Gera um nome de arquivo único
+    buffer = BytesIO()  # Usar um buffer de memória
 
-    # Configuração para baixar o áudio (MP3)
-    audio_opts = {
-        'format': 'bestaudio/best',
-        'outtmpl': os.path.join(settings.MEDIA_ROOT, f'{nome_base}.%(ext)s'),  # Remover a extensão duplicada
+    ydl_opts = {
+        'format': 'bestaudio/best' if formato == 'mp3' else 'bestvideo+bestaudio/best',
+        'outtmpl': f'{nome_base}.%(ext)s',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
             'preferredquality': '192',
-        }],
+        }] if formato == 'mp3' else [],
+        'outtmpl': '-',  # Saída como fluxo padrão
+        'quiet': True,  # Suprimir a saída do yt-dlp
     }
 
-    # Configuração para baixar o vídeo (MP4)
-    video_opts = {
-        'format': 'bestvideo+bestaudio/best',
-        'outtmpl': os.path.join(settings.MEDIA_ROOT, f'{nome_base}.%(ext)s'),  # Manter a extensão correta
-    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
+        info_dict = ydl.extract_info(url, download=False)
+        if formato == 'mp3':
+            ydl.process_info(info_dict)
+            buffer.write(ydl.download([url]))
+        else:
+            buffer.write(ydl.download([url]))
 
-    with yt_dlp.YoutubeDL(audio_opts) as ydl_audio, yt_dlp.YoutubeDL(video_opts) as ydl_video:
-        info = ydl_audio.extract_info(url, download=True)
-        ydl_video.download([url])
-
-        return {
-            'titulo': info.get('title', 'Título Desconhecido'),
-            'thumbnail': info.get('thumbnail', ''),
-            'audio_quality': '320kbps',
-            'video_quality': info.get('format', 'Desconhecido').split(' ')[-1],
-            'nome_mp3': f'{nome_base}.mp3',  # Garantir que a extensão correta seja usada
-            'nome_mp4': f'{nome_base}.mp4',  # Garantir que a extensão correta seja usada
-        }
+    buffer.seek(0)
+    return buffer, f"{info_dict['title']}.{formato}"
 
 def index(request):
     if request.method == 'POST':
         url = request.POST.get('url')
-        video_info = baixar_audio_video(url)
-        return render(request, 'youtube_downloader/index.html', {
-            'success': True,
-            'titulo_video': video_info['titulo'],
-            'thumbnail': video_info['thumbnail'],
-            'audio_quality': video_info['audio_quality'],
-            'video_quality': video_info['video_quality'],
-            'nome_mp3': video_info['nome_mp3'],
-            'nome_mp4': video_info['nome_mp4'],
-        })
+        formato = request.POST.get('formato')
+
+        buffer, filename = baixar_audio_video(url, formato)
+
+        response = HttpResponse(buffer, content_type='audio/mpeg' if formato == 'mp3' else 'video/mp4')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        return response
     return render(request, 'youtube_downloader/index.html')
