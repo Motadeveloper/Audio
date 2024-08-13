@@ -143,10 +143,11 @@
             box-sizing: border-box;
         }
 
-        .video-card img {
+        .video-card video {
             max-width: 100%;
             border-radius: 10px;
             margin-bottom: 15px;
+            background-color: #000;
         }
 
         .video-card h2 {
@@ -244,7 +245,7 @@
         </div>
         
         <div class="video-card" id="video-card">
-            <img id="video-thumbnail" src="" alt="Thumbnail">
+            <video id="video-preview" muted loop></video>
             <h2 id="video-title"></h2>
             <div class="download-buttons">
                 <button id="download-mp3">Baixar MP3</button>
@@ -260,7 +261,7 @@
             const loader = document.getElementById('loader');
             const videoCard = document.getElementById('video-card');
             const videoTitle = document.getElementById('video-title');
-            const videoThumbnail = document.getElementById('video-thumbnail');
+            const videoPreview = document.getElementById('video-preview');
             const downloadMp3Button = document.getElementById('download-mp3');
             const downloadMp4Button = document.getElementById('download-mp4');
 
@@ -286,7 +287,8 @@
                         .then(response => response.json())
                         .then(data => {
                             videoTitle.textContent = data.titulo;
-                            videoThumbnail.src = data.thumbnail;
+                            videoPreview.src = data.preview_url;  // Supondo que `preview_url` seja a URL do vídeo
+                            videoPreview.play();
                             downloadMp3Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp3'`);
                             downloadMp4Button.setAttribute('onclick', `window.location.href='/download_video/?url=${encodeURIComponent(url)}&format=mp4'`);
 
