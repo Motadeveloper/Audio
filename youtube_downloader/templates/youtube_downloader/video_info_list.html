@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            color: #444;
+            letter-spacing: 1px;
+        }
+        .video-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .video-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .video-thumbnail {
+            width: 120px;
+            height: 80px;
+            border-radius: 6px;
+            background-color: #000;
+            flex-shrink: 0;
+            margin-right: 15px;
+            overflow: hidden;
+        }
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .video-info {
+            flex: 1;
+        }
+        .video-title {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            color: #222;
+            font-weight: bold;
+        }
+        .video-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+            display: inline-block;
+            transition: color 0.2s ease;
+        }
+        .video-link:hover {
+            color: #004999;
+        }
+        .video-count {
+            font-size: 0.85em;
+            color: #777;
+        }
+        #loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2em;
+            color: #666;
+            width: 100%;
+        }
+        .total-conversions {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5em;
+            color: #333;
+            letter-spacing: 0.5px;
+        }
+        @media (max-width: 600px) {
+            .video-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .video-thumbnail {
+                width: 100%;
+                height: auto;
+                margin-bottom: 10px;
+            }
+            .video-title {
+                font-size: 1em;
+            }
+            .total-conversions {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Histórico</h1>
+        <div class="total-conversions">{{ total_conversions }} conversões</div>
+        <div id="video-container" class="video-container">
+            {% for video in video_data %}
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/{{ video.video_id }}/hqdefault.jpg" alt="Miniatura do vídeo">
+                </div>
+                <div class="video-info">
+                    <div class="video-title">{{ video.title }}</div>
+                    <a class="video-link" href="{{ video.url }}" target="_blank">Acessar vídeo</a>
+                    <div class="video-count">Solicitado {{ video.request_count }} vezes</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div id="loading">Carregando...</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let page = 2;
+            let loading = false;
+            let allLoaded = false; // Flag to stop loading after last page
+            const container = document.getElementById('video-container');
+            const loadingElement = document.getElementById('loading');
+
+            window.addEventListener('scroll', function() {
+                if (!allLoaded && window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 && !loading) {
+                    loading = true;
+                    loadingElement.style.display = 'block';
+
+                    fetch(`?page=${page}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            data.forEach(video => {
+                                const videoCard = document.createElement('div');
+                                videoCard.classList.add('video-card');
+
+                                const thumbnail = document.createElement('div');
+                                thumbnail.classList.add('video-thumbnail');
+                                const img = document.createElement('img');
+                                img.src = `https://img.youtube.com/vi/${video.video_id}/hqdefault.jpg`;
+                                thumbnail.appendChild(img);
+                                videoCard.appendChild(thumbnail);
+
+                                const info = document.createElement('div');
+                                info.classList.add('video-info');
+                                const title = document.createElement('div');
+                                title.classList.add('video-title');
+                                title.innerText = video.title;
+                                info.appendChild(title);
+
+                                const link = document.createElement('a');
+                                link.classList.add('video-link');
+                                link.href = video.url;
+                                link.target = '_blank';
+                                link.innerText = 'Acessar vídeo';
+                                info.appendChild(link);
+
+                                const count = document.createElement('div');
+                                count.classList.add('video-count');
+                                count.innerText = `Solicitado ${video.request_count} vezes`;
+                                info.appendChild(count);
+
+                                videoCard.appendChild(info);
+                                container.appendChild(videoCard);
+                            });
+                            page++;
+                            loading = false;
+                        } else {
+                            loadingElement.innerText = 'Nenhum vídeo mais para carregar';
+                            allLoaded = true; // Stop further loading
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao carregar mais vídeos:', error);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
