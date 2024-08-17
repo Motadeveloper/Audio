@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponse
 import yt_dlp
@@ -6,6 +6,7 @@ import uuid
 import os
 from io import BytesIO
 from .models import VideoInfo
+import yt_dlp as youtube_dl
 
 def obter_informacoes_video(url):
     ydl_opts = {
@@ -118,3 +119,31 @@ def video_info_list(request):
 
 def index(request):
     return render(request, 'youtube_downloader/index.html')
+
+
+def download_and_convert_playlist_to_mp3(playlist_url, download_path='downloads'):
+    if not os.path.exists(download_path):
+        os.makedirs(download_path)
+
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'outtmpl': os.path.join(download_path, '%(title)s.%(ext)s'),
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([playlist_url])
+
+def playlist_converter(request):
+    if request.method == 'POST':
+        playlist_url = request.POST.get('playlistUrl')
+        try:
+            download_and_convert_playlist_to_mp3(playlist_url)
+            return redirect('playlist_converter')  # Redireciona de volta à página inicial após a conversão
+        except Exception as e:
+            return render(request, 'youtube_downloader/playlist_converter.html', {'error': str(e)})
+    return render(request, 'youtube_downloader/playlist_converter.html')

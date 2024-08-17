@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Baixar Playlist do YouTube para MP3 - Rápido e Fácil!</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="https://compartil.com.br/media/comprovantes_residencia/1.png">
+    <meta name="description" content="Baixe playlists do YouTube em MP3 de forma rápida e gratuita. Converta suas playlists favoritas em arquivos de áudio MP3 com nossa ferramenta online.">
+    <meta name="keywords" content="baixar playlist do YouTube para MP3, converter YouTube para MP3, download de áudio do YouTube, baixar áudio do YouTube, conversor YouTube para MP3">
+    <meta name="author" content="baixaryoutubemp3.com.br">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Baixar Playlist do YouTube para MP3 - Rápido e Fácil!">
+    <meta property="og:description" content="Baixe playlists do YouTube em MP3 de forma rápida e gratuita. Converta suas playlists favoritas em arquivos de áudio MP3 com nossa ferramenta online.">
+    <meta property="og:url" content="https://baixaryoutubemp3.com.br">
+    <meta property="og:image" content="https://compartil.com.br/media/documentos_oficiais/2.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Baixar Playlist do YouTube para MP3 - Rápido e Fácil!">
+    <meta name="twitter:description" content="Baixe playlists do YouTube em MP3 de forma rápida e gratuita. Converta suas playlists favoritas em arquivos de áudio MP3 com nossa ferramenta online.">
+    <meta name="twitter:image" content="https://compartil.com.br/media/documentos_oficiais/2.png">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 6px solid #ccc;
+            border-top: 6px solid #ff4b2b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+            opacity: 0;
+            animation: slideUp 0.5s forwards;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .container {
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 5vw;
+            margin-bottom: 20px;
+            color: #333;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        h1 span {
+            color: red;
+        }
+
+        p {
+            font-size: 3vw;
+            color: #333;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        @media (min-width: 1024px) {
+            p {
+                font-size: 1.5vw;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 8vw;
+            }
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 20px;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 1s ease forwards;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .input-container input:focus {
+            border-color: #ff4b2b;
+            outline: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .result {
+            margin-top: 20px;
+            color: red;
+            font-weight: bold;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p id="loader-message">Buscando vídeos na playlist...</p>
+        <p class="loader-message" id="extra-message"></p>
+    </div>
+
+    <div class="container">
+        <h1>Baixar Playlist do <span>YouTube</span> para MP3</h1>
+        <p>Converta e baixe playlists do YouTube em MP3 gratuitamente</p>
+        <div class="input-container">
+            <form id="playlistForm" action="" method="post">
+                {% csrf_token %}
+                <input type="text" id="playlistUrl" name="playlistUrl" placeholder="Cole o link da playlist do YouTube aqui..." required>
+            </form>
+        </div>
+
+        {% if error %}
+        <div class="result">{{ error }}</div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlInput = document.getElementById('playlistUrl');
+            const loader = document.getElementById('loader');
+            const loaderMessage = document.getElementById('loader-message');
+            const extraMessage = document.getElementById('extra-message');
+            const form = document.getElementById('playlistForm');
+
+            let timeout = null;
+
+            function submitForm() {
+                loaderMessage.textContent = "Baixando Playlist...";
+                loader.style.display = 'flex';
+
+                setTimeout(() => {
+                    extraMessage.textContent = "Finalizando o download...";
+                    extraMessage.style.display = 'block';
+                }, 3000);
+
+                setTimeout(() => {
+                    extraMessage.textContent = "Divulgue nossa ferramenta para os amigos!";
+                }, 6000);
+
+                form.submit();
+            }
+
+            urlInput.addEventListener('input', function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    if (urlInput.value) {
+                        submitForm();
+                    }
+                }, 500);  // Tempo de espera após parar de digitar (em milissegundos)
+            });
+
+            urlInput.addEventListener('paste', function() {
+                setTimeout(() => {
+                    if (urlInput.value) {
+                        submitForm();
+                    }
+                }, 100);  // Pequeno delay para garantir que o valor colado seja capturado
+            });
+        });
+    </script>
+</body>
+</html>
