@@ -14,11 +14,26 @@ SECRET_KEY = 'django-insecure-r7h4m_!d&rf@tnxgluzxisnr5%xay&qh=28%!(v@82#ccs+vya
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['baixaryoutubemp3.com.br', 'www.baixaryoutubemp3.com.br', '195.35.16.28', 'mp3conversor.com.br', 'www.mp3conversor.com.br']
+ALLOWED_HOSTS = [
+    'baixaryoutubemp3.com.br', 
+    'www.baixaryoutubemp3.com.br', 
+    '195.35.16.28', 
+    'mp3conversor.com.br', 
+    'www.mp3conversor.com.br'
+]
 
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = [
+    'https://baixaryoutubemp3.com.br',
+    'https://www.baixaryoutubemp3.com.br',
+    'https://mp3conversor.com.br',
+    'https://www.mp3conversor.com.br',
+]
+
+CSRF_COOKIE_SECURE = True  # Only if using HTTPS
+CSRF_COOKIE_HTTPONLY = True  # Adds an additional layer of security
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -93,9 +108,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 

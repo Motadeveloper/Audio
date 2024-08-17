@@ -138,6 +138,7 @@ def download_and_convert_playlist_to_mp3(playlist_url, download_path='downloads'
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([playlist_url])
 
+@csrf_exempt
 def playlist_converter(request):
     if request.method == 'POST':
         playlist_url = request.POST.get('playlistUrl')
