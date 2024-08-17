@@ -12,9 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-r7h4m_!d&rf@tnxgluzxisnr5%xay&qh=28%!(v@82#ccs+vya'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['baixaryoutubemp3.com.br', 'www.baixaryoutubemp3.com.br', '195.35.16.28', 'mp3conversor.com.br', 'www.mp3conversor.com.br']
 
 
 # Application definition
